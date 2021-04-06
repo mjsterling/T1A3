@@ -22,18 +22,20 @@ class App
   end
 
   def menu
-    puts
-    puts '╭╮╭╮╭┳╮ ╭┳━━━╮ ╭╮╭╮╭┳━━━┳━╮ ╭┳━━━━┳━━━╮ ╭━━━━┳━━━╮ ╭━━╮╭━━━╮ ╭━━━╮ ╭━╮╭━┳━━┳╮  ╭╮  ╭━━┳━━━┳━╮ ╭┳━━━┳━━┳━━━┳━━━╮'
-    puts '┃┃┃┃┃┃┃ ┃┃╭━╮┃ ┃┃┃┃┃┃╭━╮┃┃╰╮┃┃╭╮╭╮┃╭━╮┃ ┃╭╮╭╮┃╭━╮┃ ┃╭╮┃┃╭━━╯ ┃╭━╮┃ ┃┃╰╯┃┣┫┣┫┃  ┃┃  ╰┫┣┫╭━╮┃┃╰╮┃┃╭━╮┣┫┣┫╭━╮┃╭━━╯'
-    puts '┃┃┃┃┃┃╰━╯┃┃ ┃┃ ┃┃┃┃┃┃┃ ┃┃╭╮╰╯┣╯┃┃╰┫╰━━╮ ╰╯┃┃╰┫┃ ┃┃ ┃╰╯╰┫╰━━╮ ┃┃ ┃┃ ┃╭╮╭╮┃┃┃┃┃  ┃┃   ┃┃┃┃ ┃┃╭╮╰╯┃┃ ┃┃┃┃┃╰━╯┃╰━━╮'
-    puts '┃╰╯╰╯┃╭━╮┃┃ ┃┃ ┃╰╯╰╯┃╰━╯┃┃╰╮┃┃ ┃┃ ╰━━╮┃   ┃┃ ┃┃ ┃┃ ┃╭━╮┃╭━━╯ ┃╰━╯┃ ┃┃┃┃┃┃┃┃┃┃ ╭┫┃ ╭╮┃┃┃┃ ┃┃┃╰╮┃┃╰━╯┃┃┃┃╭╮╭┫╭━━╯'
-    puts '╰╮╭╮╭┫┃ ┃┃╰━╯┃ ╰╮╭╮╭┫╭━╮┃┃ ┃┃┃ ┃┃ ┃╰━╯┃   ┃┃ ┃╰━╯┃ ┃╰━╯┃╰━━╮ ┃╭━╮┃ ┃┃┃┃┃┣┫┣┫╰━╯┃╰━╯┣┫┣┫╰━╯┃┃ ┃┃┃╭━╮┣┫┣┫┃┃╰┫╰━━╮'
-    puts ' ╰╯╰╯╰╯ ╰┻━━━╯  ╰╯╰╯╰╯ ╰┻╯ ╰━╯ ╰╯ ╰━━━╯   ╰╯ ╰━━━╯ ╰━━━┻━━━╯ ╰╯ ╰╯ ╰╯╰╯╰┻━━┻━━━┻━━━┻━━┻━━━┻╯ ╰━┻╯ ╰┻━━┻╯╰━┻━━━╯'
-    puts
-    # TODO: - WWTBAM LOGO
     loop do
+      system('clear')
+      puts ('─' * 50).yellow
+      puts "#{' ' * 12}🇬 ​​​​​🇪​​​​​ 🇲​​​​​ 🇮 ​​🇱​​​​​ 🇱​​​​​ 🇮​​​​​ 💎🇳​​​​​ 🇦​​​​​ 🇮​​​​​ 🇷​​​​​ 🇪#{' ' * 12}​​​​​"
+      puts ('─' * 50).yellow
+      puts
+      puts 'Who Wants To Be A Terminal-Based Millionaire?'.yellow.bold
+      puts
+      puts 'Created by Matthew Sterling, 2021. '
+      puts 'Source code: https://github.com/mjsterling/T1A3'
+      puts
       prompt = prompt_instance
-      prompt.select('Select an option:') do |menu|
+      puts ('─' * 50).yellow
+      prompt.select("For best experience, please maximise your terminal.\n".bold) do |menu|
         menu.choice 'New Game', -> { Game.new }
         menu.choice 'Instructions', -> { run_instructions }
         menu.choice 'Hiscores', -> { run_hiscores }
@@ -50,10 +52,12 @@ class App
     average_earnings = games_played.zero? ? 0 : total_winnings / games_played
     puts
     puts "Total games played: #{games_played}"
-    puts "Top score: #{hiscore} \u{1F48E}"
-    puts "Total winnings: #{total_winnings} \u{1F48E}"
-    puts "Average earnings per game: #{average_earnings} \u{1F48E}"
+    puts "Top score: #{hiscore} 💎"
+    puts "Total winnings: #{total_winnings} 💎"
+    puts "Average earnings per game: #{average_earnings} 💎"
     puts
+    puts 'Press Enter to continue.'.green
+    gets
   end
 end
 
@@ -118,10 +122,10 @@ class Game < App
       { name: "B - #{current_q['B']}", value: -> { check_answer('B') } },
       { name: "C - #{current_q['C']}", value: -> { check_answer('C') } },
       { name: "D - #{current_q['D']}", value: -> { check_answer('D') } },
-      { name: "Walk away with #{PRIZES[@score]} \u{1F48E}", value: -> { confirm_walk_away } },
-      { name: 'Lifeline - 50/50', value: -> { fifty_fifty } },
-      { name: 'Lifeline - Ask The Audience', value: -> { ask_the_audience } },
-      { name: 'Lifeline - Phone A Friend', value: -> { phone_a_friend } }
+      { name: "Walk away with #{PRIZES[@score]} 💎", value: -> { confirm_walk_away } },
+      { name: ' ½ - 50/50', value: -> { fifty_fifty } },
+      { name: '🗨  - Ask The Audience', value: -> { ask_the_audience } },
+      { name: '📱 - Phone A Friend', value: -> { phone_a_friend } }
     ]
     unless ff_avail
       choices[5][:disabled] = ''
@@ -142,7 +146,7 @@ class Game < App
       choices[@ff_options[1]][:disabled] = ''
     end
     q_prompt = prompt_instance
-    q_prompt.select('Select an option:', choices, per_page: 8)
+    q_prompt.select('Select an option:'.bold, choices, per_page: 8)
   end
 
   def check_answer(answer)
@@ -152,7 +156,10 @@ class Game < App
       @ff_active = false
       @ask_the_audience_active = false
       @phone_a_friend_active = false
-      @win = true if @score == 15
+      if @score == 15
+        @win = true
+        you_win
+      end
     else
       @lose = true
       correct_answer = current_q['answer']
@@ -165,13 +172,17 @@ class Game < App
     prize = 0
     case @score
     when 10..14
-      prize = PRIZES[10].to_i
+      prize = PRIZES[10].gsub(',', '').to_i
     when 5..9
-      prize = PRIZES[5].to_i
+      prize = PRIZES[5].gsub(',', '').to_i
     end
-    puts "You won #{prize} \u{1F48E}. Better luck next time!"
+    puts "You won #{prize} 💎. Better luck next time!"
+    puts
+    puts 'Press Enter to continue.'.green
+    gets
     @@statistics['games_played'] = (@@statistics['games_played'].to_i + 1).to_s
     @@statistics['total_winnings'] = (@@statistics['total_winnings'].to_i + prize).to_s
+    @@statistics['hiscore'] = prize.to_s if prize > @@statistics['hiscore'].to_i
   end
 
   def confirm_walk_away
@@ -185,21 +196,18 @@ class Game < App
   def walk_away
     @lose = true
     prize = PRIZES[@score].gsub(',', '').to_i
-    puts "You won #{PRIZES[@score]} \u{1F48E}. Better luck next time!"
+    puts "You won #{PRIZES[@score]} 💎. Better luck next time!"
     @@statistics['games_played'] = (@@statistics['games_played'].to_i + 1).to_s
     @@statistics['total_winnings'] = (@@statistics['total_winnings'].to_i + prize).to_s
+    @@statistics['hiscore'] = prize.to_s if prize > @@statistics['hiscore'].to_i
   end
 
   def score_table
     i = 0
     while i < 16
-      if i == @score
-        print "| #{PRIZES[i].yellow.bold} \u{1F48E} "
-      elsif [6, 11].include?(i)
-        print "| #{PRIZES[i]} \u{1F48E} ".underline
-      else
-        print "| #{PRIZES[i]} \u{1F48E} "
-      end
+      puts '|' if [5, 10, 15].include?(i)
+      print '|'
+      print i == @score ? "#{PRIZES[i]} 💎".center(13).bold.yellow : "#{PRIZES[i]} 💎".center(13)
       i += 1
     end
     puts '|'
@@ -217,25 +225,20 @@ class Game < App
     @ask_the_audience_active = true
     @ask_the_audience_avail = false
     answer = @q_sample[@score]['answer']
-    roll = rand(6)
-    total = 100
-    if roll < 2
-      i = 0
-      while i < 3
-        @ata_graph[i] = rand(total)
-        total -= @ata_graph[i]
-        i += 1
-      end
-      @ata_graph[3] = total
-    else
-      i = 0
-      while i < 3
-        random = i == @keys[answer] ? rand(total) + 40 : rand(total)
-        @ata_graph[i] = random
-        total -= random
-        i += 1
-      end
-      @ata_graph[3] = total
+    total = 60
+    i = 0
+    while i < 3
+      percent = rand(total)
+      @ata_graph[i] = percent + 10
+      total -= percent
+      i += 1
+    end
+    @ata_graph[3] = total + 10
+    @ata_graph.shuffle!
+    return if rand(2).zero?
+
+    @ata_graph.each_index do |n|
+    @ata_graph[n] += n == @keys[answer] ? 30 : -10
     end
   end
 
