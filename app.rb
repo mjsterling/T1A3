@@ -51,24 +51,26 @@ end
 
 # Initialize a new game instance
 class Game < App
-  attr_accessor :q_sample, :prizes, :score, :lifelines, :fifty_fifty_avail, :fifty_fifty_active,
+  attr_accessor :q_sample, :prizes, :score, :lifelines, :ff_avail, :ff_active,
                 :ask_the_audience_avail, :ask_the_audience_active, :phone_a_friend_avail, :phone_a_friend_active, :win,
-                :lose, :fifty_fifty_options
+                :lose, :ff_options
 
   def initialize
     super
 
     @score = 0
-    @fifty_fifty_avail = true
+    @ff_avail = true
     @ask_the_audience_avail = true
     @phone_a_friend_avail = true
-    @fifty_fifty_active = false
+    @ff_active = false
     @ask_the_audience_active = false
     @phone_a_friend_active = false
     @win = false
     @lose = false
     @q_sample = @@questions.sample(15)
-    @fifty_fifty_options = [0, 1, 2, 3]
+    @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
+    @ff_options = [0, 1, 2, 3]
+    @ata_graph = []
 
     run_game
   end
@@ -85,7 +87,12 @@ class Game < App
     puts
     puts "Question #{@score + 1}: #{current_q['question']}".bold
     if ask_the_audience_active
-
+      puts
+      puts 'Ask The Audience'.center(40, ' ')
+      print "A - #{@ata_graph[0]}%".center(10, ' ')
+      print "B - #{@ata_graph[1]}%".center(10, ' ')
+      print "C - #{@ata_graph[2]}%".center(10, ' ')
+      puts "D - #{@ata_graph[3]}%".center(10, ' ')
     end
     puts
     choices = [
@@ -98,22 +105,23 @@ class Game < App
       { name: 'Lifeline - Ask The Audience', value: -> { ask_the_audience } },
       { name: 'Lifeline - Phone A Friend', value: -> { phone_a_friend } }
     ]
-    unless fifty_fifty_avail
-        choices[5][:disabled] = ''
-        choices[5][:name] = 'Lifeline - 50/50'.red
+    unless ff_avail
+      choices[5][:disabled] = ''
+      choices[5][:name] = choices[5][:name].red
     end
     unless ask_the_audience_avail
-        choices[6][:disabled] = '' 
-        choices[6][:name] = choices[6][:name].red
+      choices[6][:disabled] = ''
+      choices[6][:name] = choices[6][:name].red
     end
     unless phone_a_friend_avail
-        choices[7][:disabled] = '' 
-    if fifty_fifty_active
-      # check right answer
-      choices[@fifty_fifty_options[0]][:name] = choices[@fifty_fifty_options[0]][:name].red
-      choices[@fifty_fifty_options[0]][:disabled] = ''
-      choices[@fifty_fifty_options[1]][:name] = choices[@fifty_fifty_options[1]][:name].red
-      choices[@fifty_fifty_options[1]][:disabled] = ''
+      choices[7][:disabled] = ''
+      choices[7][:name] = choices[7][:name].red
+    end
+    if ff_active
+      choices[@ff_options[0]][:name] = choices[@ff_options[0]][:name].red
+      choices[@ff_options[0]][:disabled] = ''
+      choices[@ff_options[1]][:name] = choices[@ff_options[1]][:name].red
+      choices[@ff_options[1]][:disabled] = ''
     end
     q_prompt = prompt_instance
     q_prompt.select('Select an option:', choices, per_page: 8)
@@ -123,7 +131,7 @@ class Game < App
     current_q = @q_sample[@score]
     if answer == current_q['answer']
       @score += 1
-      @fifty_fifty_active = false
+      @ff_active = false
       @ask_the_audience_active = false
       @phone_a_friend_active = false
       @win = true if @score == 15
@@ -180,25 +188,37 @@ class Game < App
   end
 
   def fifty_fifty
-    @fifty_fifty_avail = false
-    @fifty_fifty_active = true
-    answer = @questions[@score]['answer']
+    @ff_avail = false
+    @ff_active = true
+    answer = @q_sample[@score]['answer']
     case answer
     when 'A'
-      @fifty_fifty_options.slice!(0)
+      @ff_options.slice!(0)
     when 'B'
-      @fifty_fifty_options.slice!(1)
+      @ff_options.slice!(1)
     when 'C'
-      @fifty_fifty_options.slice!(2)
+      @ff_options.slice!(2)
     when 'D'
-      @fifty_fifty_options.pop
+      @ff_options.pop
     end
-    @fifty_fifty_options.slice!(rand(2))
+    @ff_options.slice!(rand(2))
   end
 
   def ask_the_audience
     @ask_the_audience_active = true
     @ask_the_audience_avail = false
+    answer = @q_sample[@score]['answer']
+    roll = rand(6)
+    total = 100
+    if roll < 2
+      i = 0
+      while i < 3
+        @ata_graph[i] = [rand(total)]
+        total -= @ata_graph[i]
+        i += 1
+      end
+      @ata_graph[3] = total if i == 3
+    end
   end
 
   def phone_a_friend
