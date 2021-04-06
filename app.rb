@@ -70,7 +70,7 @@ class Game < App
     @q_sample = @@questions.sample(15)
     @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
     @ff_options = [0, 1, 2, 3]
-    @ata_graph = []
+    @ata_graph = [0, 0, 0, 0]
 
     run_game
   end
@@ -191,16 +191,7 @@ class Game < App
     @ff_avail = false
     @ff_active = true
     answer = @q_sample[@score]['answer']
-    case answer
-    when 'A'
-      @ff_options.slice!(0)
-    when 'B'
-      @ff_options.slice!(1)
-    when 'C'
-      @ff_options.slice!(2)
-    when 'D'
-      @ff_options.pop
-    end
+    @ff_options.slice!(@keys[answer])
     @ff_options.slice!(rand(2))
   end
 
@@ -213,11 +204,20 @@ class Game < App
     if roll < 2
       i = 0
       while i < 3
-        @ata_graph[i] = [rand(total)]
+        @ata_graph[i] = rand(total)
         total -= @ata_graph[i]
         i += 1
       end
-      @ata_graph[3] = total if i == 3
+      @ata_graph[3] = total
+    else
+      i = 0
+      while i < 3
+        random = i == @keys[answer] ? rand(total) + 40 : rand(total)
+        @ata_graph[i] = random
+        total -= random
+        i += 1
+      end
+      @ata_graph[3] = total
     end
   end
 
