@@ -39,3 +39,17 @@ A user will download and use the app by either installing the gem in their termi
     - 50/50 removes two incorrect answers, leaving the player with only two options;
     - Ask the audience will show a graph, the accuracy of which will be based on RNG;
     - Phone a friend will give the correct answer a decent amount of the time, again based on RNG.
+
+### UI/UX
+
+The opening screen will present a selection menu where users can select which part of the application they wish to visit.
+
+There will be a help/instructions screen (automatically shown on first start) telling users how to play the game and subsequently accessible from the main menu.
+
+Users can navigate through menu options using arrow keys.
+
+### Diagram:
+
+
+
+
