@@ -44,20 +44,18 @@ class App
   end
 
   def run_instructions
-    system('clear')
-    puts 'How To Play Gemillionaire:'
+    puts "\nHow To Play Gemillionaire:".bold
     puts 'You must answer 15 multiple-choice questions correctly in a row to win 1 million 💎.'
     puts 'You may walk away at any time and keep your earnings.'
     print 'If you answer a question wrong, you fall back to the last guarantee point - '
     puts '5,000 💎 if 5 questions correct, 25,000 💎 if 10 questions correct.'
     puts 'At any point, you may use one of the three lifelines:'
     puts '   - 50/50: Removes two incorrect options from the list'
-    print '   - Ask The Audience: The audience answers the question '
-    puts 'and results are displayed as a graph. They are not always correct.'
-    print '   - Phone-A-Friend: A friend will tell you what they think the answer is.'
-    puts ' They are not always correct, beware!'
-
-
+    puts '   - Ask The Audience: Each audience member answers the question and the results are displayed as a graph.'
+    puts '   - Phone-A-Friend: A friend will say what they think the answer is. They are not always correct, beware!'
+    puts "Each lifeline may only be used once.\n"
+    puts 'Press Enter to continue'.green
+    gets
   end
 
   def run_hiscores
