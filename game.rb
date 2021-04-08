@@ -88,14 +88,10 @@ class Game < App
     return you_lose(answer_k, answer_v) unless input == answer_k
 
     @score += 1
-    clear_lifelines
-    you_win if @score == 15
-  end
-
-  def clear_lifelines
     @lifelines[:ff]  = 'used' if @lifelines[:ff]  == 'active'
     @lifelines[:ata] = 'used' if @lifelines[:ata] == 'active'
     @lifelines[:paf] = 'used' if @lifelines[:paf] == 'active'
+    you_win if @score == 15
   end
 
   def you_win
@@ -109,7 +105,7 @@ class Game < App
   def you_lose(answer_k, answer_v)
     puts "Incorrect! The correct answer was #{answer_k} - #{answer_v}."
     @game_over = true
-    prize = @@PRIZES[@score / 5 * 5]
+    prize = @@PRIZES[@score / 5 * 5] # removes remainder and returns 0, 5 or 10
     puts "You won #{prize} 💎. Better luck next time!"
     update_stats(prize.gsub(',', '').to_i)
   end
@@ -156,13 +152,14 @@ class Game < App
 
   def gen_graph
     total = 60
+    graph = []
     3.times do
       percent = rand(total)
-      @lifelines[:ata_graph] << percent + 10
+      graph << percent + 10
       total -= percent
     end
-    @lifelines[:ata_graph] << total + 10
-    @lifelines[:ata_graph].shuffle!
+    graph << total + 10
+    graph.shuffle!
   end
 
   def ask_the_audience(answer)
