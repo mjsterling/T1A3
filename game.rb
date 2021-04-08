@@ -79,11 +79,9 @@ class Game < App
       @score += 1
       clear_lifelines
       if @score == 15
-        @game_over = true
         you_win
       end
     else
-      @game_over = true
       puts "Incorrect! The correct answer was #{answer_k} - #{answer_v}."
       you_lose
     end
@@ -97,12 +95,14 @@ class Game < App
 
   def you_win
     system('clear')
+    @game_over = true
     score_table
     puts 'CONGRATULATIONS! You won 1 million gems!!!!'.bold
     update_stats(1_000_000)
   end
 
   def you_lose
+    @game_over = true
     prize = '0'
     case @score
     when 10..14
