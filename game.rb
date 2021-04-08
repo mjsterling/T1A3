@@ -1,24 +1,15 @@
 # Initialize a new game instance
 class Game < App
-  attr_accessor :q_sample, :prizes, :score, :lifelines, :ff_avail, :ff_active,
-                :ata_avail, :ata_active, :paf_avail, :paf_active, :game_over, :ff_options
+  attr_accessor :q_sample, :score, :lifelines, :game_over, :keys
 
   def initialize
     super
 
     @q_sample = @@questions.sample(15)
     @score = 0
-    @ff_avail = true
-    @ata_avail = true
-    @paf_avail = true
-    @ff_active = false
-    @ata_active = false
-    @paf_active = false
+    @lifelines = { ff: 'avail', ff_options: [0, 1, 2, 3], ata: 'avail', ata_graph: [], paf: 'avail', paf_answer: [] }
     @game_over = false
     @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
-    @ff_options = [0, 1, 2, 3]
-    @ata_graph = []
-    @paf_answer = ''
 
     display_question until @game_over
   end
@@ -26,58 +17,61 @@ class Game < App
   def display_question
     system('clear')
     current_q = @q_sample[@score]
-    question = current_q['question']
+    score_table
+    puts "\nQuestion #{@score + 1}: #{current_q['question']}\n".bold
+    display_ata if @lifelines[:ata] == 'active'
+    display_paf if @lifelines[:paf] == 'active'
+    prompt = prompt_instance
+    prompt.select('Select an option:'.bold, generate_choices(current_q), per_page: 8)
+  end
+
+  def generate_choices(current_q)
     answer_k = current_q['answer']
     answer_v = current_q[answer_k]
-    score_table
-    puts "\nQuestion #{@score + 1}: #{question}\n".bold
-    display_lifelines
-    prompt = prompt_instance
-    prompt.select('Select an option:'.bold, generate_choices(current_q, answer_k, answer_v), per_page: 8)
-  end
-
-  def display_lifelines
-    if ata_active
-      puts 'Ask The Audience'.center(40, ' ')
-      @keys.each do |k, v|
-        print "#{k} - #{@ata_graph[v]}%".center(10, ' ')
-      end
-      puts "\n\n"
-    end
-    if paf_active
-      puts 'Phone A Friend'.center(40, ' ')
-      puts "\'I think it's #{@paf_answer}.\'".center(40, ' ')
-      puts
-    end
-  end
-
-  def generate_choices(current_q, answer_k, answer_v)
     choices = []
     @keys.each do |k, v|
       choices << { name: "#{k} - #{current_q[k]}", value: -> { check_answer(answer_k, answer_v, k) } }
-      choices.last[:name] = choices.last[:name].red if @ff_options.include?(v)
-      choices.last[:disabled] = '' if @ff_options.include?(v)
+      if @lifelines[:ff] == 'active' && @lifelines[:ff_options].include?(v)
+        choices.last[:name] = choices.last[:name].red
+        choices.last[:disabled] = ''
+      end
     end
     choices << { name: "Walk away with #{@@PRIZES[@score]} 💎", value: -> { confirm_walk_away } }
     choices << { name: ' ½ - 50/50', value: -> { fifty_fifty(answer_k) } }
     choices << { name: '🗨  - Ask The Audience', value: -> { ask_the_audience(answer_k) } }
     choices << { name: '📱 - Phone A Friend', value: -> { phone_a_friend(answer_k) } }
     disable_lifelines(choices)
+    choices
   end
 
   def disable_lifelines(choices)
-    unless ff_avail
+    unless @lifelines[:ff] == 'avail'
       choices[5][:name] = choices[5][:name].red
       choices[5][:disabled] = ''
     end
-    unless ata_avail
+    unless @lifelines[:ata] == 'avail'
       choices[6][:name] = choices[6][:name].red
       choices[6][:disabled] = ''
     end
-    return if paf_avail
+    unless @lifelines[:paf] == 'avail'
+      choices[7][:name] = choices[7][:name].red
+      choices[7][:disabled] = ''
+    end
+    choices
+  end
 
-    choices[7][:name] = choices[7][:name].red
-    choices[7][:disabled] = ''
+  def display_ata
+    puts 'Ask The Audience'.center(40, ' ')
+    @keys.each do |k, v|
+      print "#{k} - #{@lifelines[:ata_graph][v]}%".center(10, ' ')
+    end
+    puts "\n\n"
+  end
+
+  def display_paf
+    puts 'Phone A Friend'.center(40, ' ')
+    puts "\'I think it's #{@lifelines[:paf_answer]}.\'".center(40, ' ')
+    puts
   end
 
   def check_answer(answer_k, answer_v, input)
@@ -96,9 +90,9 @@ class Game < App
   end
 
   def clear_lifelines
-    @ff_active = false
-    @ata_active = false
-    @paf_active = false
+    @lifelines[:ff]  = 'used' if @lifelines[:ff]  == 'active'
+    @lifelines[:ata] = 'used' if @lifelines[:ata] == 'active'
+    @lifelines[:paf] = 'used' if @lifelines[:paf] == 'active'
   end
 
   def you_win
@@ -155,34 +149,30 @@ class Game < App
   end
 
   def fifty_fifty(answer)
-    @ff_avail = false
-    @ff_active = true
-    @ff_options = @keys.values
-    @ff_options.slice!(@keys[answer])
-    @ff_options.slice!(rand(2))
+    @lifelines[:ff] = 'active'
+    @lifelines[:ff_options].slice!(@keys[answer])
+    @lifelines[:ff_options].slice!(rand(2))
   end
 
   def ask_the_audience(answer)
-    @ata_active = true
-    @ata_avail = false
+    @lifelines[:ata] = 'active'
     total = 60
     3.times do
       percent = rand(total)
-      @ata_graph << percent + 10
+      @lifelines[:ata_graph] << percent + 10
       total -= percent
     end
-    @ata_graph << total + 10
-    @ata_graph.shuffle!
+    @lifelines[:ata_graph] << total + 10
+    @lifelines[:ata_graph].shuffle!
     return if rand(2).zero?
 
-    @ata_graph.each_with_index do |n, index|
-      n + index == @keys[answer] ? 30 : -10
+    @lifelines[:ata_graph].map!.with_index do |n, index|
+      n += index == @keys[answer] ? 30 : -10
     end
   end
 
   def phone_a_friend(answer)
-    @paf_active = true
-    @paf_avail = false
-    @paf_answer = rand(2).zero? ? @keys.keys.sample : answer
+    @lifelines[:paf] = 'active'
+    @lifelines[:paf_answer] = rand(2).zero? ? @keys.keys.sample : answer
   end
 end
