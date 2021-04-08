@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'tty-prompt'
 require 'colorize'
@@ -9,10 +11,16 @@ end
 # Run top level methods and initialize menu
 class App
   def initialize
-    @@questions = JSON.parse(File.read('./questions.json'))
-    @@statistics = JSON.parse(File.read('./hiscores.json'))
-    @@PRIZES = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
-                '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
+    @questions = JSON.parse(File.read('./questions.json'))
+    @statistics = JSON.parse(File.read('./hiscores.json'))
+    @prizes = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
+               '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
+    @menu = [
+      { name: 'New Game', value: -> { Game.new } },
+      { name: 'Instructions', value: -> { run_instructions } },
+      { name: 'Hiscores', value: -> { run_hiscores } },
+      { name: 'Exit', value: -> { exit } }
+    ]
   end
 
   def menu
@@ -21,13 +29,8 @@ class App
       display_intro
       prompt = prompt_instance
       puts ('─' * 50).yellow
-      prompt.select("For best experience, please maximise your terminal.\n".bold) do |menu|
-        menu.choice 'New Game', -> { Game.new }
-        menu.choice 'Instructions', -> { run_instructions } # TODO
-        menu.choice 'Hiscores', -> { run_hiscores }
-        menu.choice 'Exit', -> { exit }
-      end
-      File.write('./hiscores.json', JSON.dump(@@statistics))
+      prompt.select("For best experience, please maximise your terminal.\n".bold, @menu)
+      File.write('./hiscores.json', JSON.dump(@statistics))
     end
   end
 
@@ -40,12 +43,29 @@ class App
     puts "Source code: https://github.com/mjsterling/T1A3 \n"
   end
 
+  def run_instructions
+    system('clear')
+    puts 'How To Play Gemillionaire:'
+    puts 'You must answer 15 multiple-choice questions correctly in a row to win 1 million 💎.'
+    puts 'You may walk away at any time and keep your earnings.'
+    print 'If you answer a question wrong, you fall back to the last guarantee point - '
+    puts '5,000 💎 if 5 questions correct, 25,000 💎 if 10 questions correct.'
+    puts 'At any point, you may use one of the three lifelines:'
+    puts '   - 50/50: Removes two incorrect options from the list'
+    print '   - Ask The Audience: The audience answers the question '
+    puts 'and results are displayed as a graph. They are not always correct.'
+    print '   - Phone-A-Friend: A friend will tell you what they think the answer is.'
+    puts ' They are not always correct, beware!'
+
+
+  end
+
   def run_hiscores
-    games_played = @@statistics['games_played'].to_i
-    total_winnings = @@statistics['total_winnings'].to_i
+    games_played = @statistics['games_played'].to_i
+    total_winnings = @statistics['total_winnings'].to_i
     average_earnings = games_played.zero? ? 0 : total_winnings / games_played
     puts "\nTotal games played: #{games_played}"
-    puts "Top score: #{@@statistics['hiscore']} 💎"
+    puts "Top score: #{@statistics['hiscore']} 💎"
     puts "Total winnings: #{total_winnings} 💎"
     puts "Average earnings per game: #{average_earnings} 💎\n"
     puts 'Press Enter to continue.'.green
