@@ -1,6 +1,6 @@
 # Gemillionaire - T1A3 Terminal Application - Matthew Sterling
 
-Github link: https://github.com/mjsterling/T1A3
+[Github Link](https://github.com/mjsterling/T1A3)
 
 ## Software Development Plan
 
@@ -53,6 +53,60 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
 
 ### Diagram:
 
+![diagram](./T1A3ControlFlow.svg)
 
+## Implementation Plan
 
+[Trello Link](https://trello.com/b/1JPRx6TF/t1a3)
 
+## Help Documentation
+
+### How To Install Gemillionaire
+
+1. Open your terminal
+    - Windows - [How to install and run Bash on Windows 10](https:/itsfoss.com/install-bash-on-windows/)
+    - MacOS 
+        - Press Command + Spacebar
+        - Type "Terminal"
+        - Double click "Terminal" in the left sidebar to open your Mac's terminal
+    - Debian/Ubuntu
+        - Press Ctrl+Alt+T to open a terminal window
+    - Other Linux distros
+        - If you've managed to install one of these I highly doubt you need instructions.
+
+2. Install Git
+
+- [How To Install Git](https://github.com/git-guides/install-git)
+
+3. Install Ruby 2.7.2 or later
+    - Open your bash/zsh terminal
+    - Copy the following lines into your terminal, one at a time, and wait for the terminal prompt to return before entering the next one:
+    ```
+    sudo apt update
+
+    sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev libgdbm-dev
+
+    curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -
+
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+
+    source ~/.bashrc
+
+    rbenv install 2.7.2
+
+    rbenv global 2.7.2
+    ```
+    - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
+
+3. Download Gemillionaire
+
+    - Enter the following into your terminal:
+    ```
+    git clone git@github.com:mjsterling/T1A3.git
+    ```
+
+5. Run Gemillionaire
+
+    - Navigate to the downloaded folder in your terminal, then run `ruby wwtbam.rb` to start the game!
