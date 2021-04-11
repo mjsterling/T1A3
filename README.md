@@ -43,6 +43,10 @@ A user will download and use the app by ensuring they have Ruby >2.7.2 installed
     - Ask the audience will show a percentage based graph of each of the four answers, the accuracy of which will be based on RNG: 2/3 of the time the correct answer will be heavily weighted, and the other 1/3 of the time the answers will be entirely random.
     - Phone a friend will give the correct answer a decent amount of the time, again based on RNG - 2/3 of the time the "friend" will tell you the correct answer, whereas the other 1/3 an answer will be selected at random.
 
+- Error Handling
+
+    The application will check that its file dependencies are present before executing, and return an in-application error message indicating that the user needs to reinstall the application.
+
 ### UI/UX
 
 The opening screen will present a selection menu where users can select which part of the application they wish to visit.
@@ -100,7 +104,7 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
     ```
     - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
 
-3. Download Gemillionaire
+4. Download Gemillionaire
 
     - Enter the following into your terminal:
     ```

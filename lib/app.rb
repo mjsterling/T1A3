@@ -10,13 +10,15 @@ end
 
 # Run top level methods and initialize menu
 class App
+  attr_accessor :questions, :statistics, :prizes, :main_menu
+
   def initialize
     check_dependencies
     @questions = JSON.parse(File.read('./lib/questions.json'))
     @statistics = JSON.parse(File.read('./lib/hiscores.json'))
     @prizes = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
                '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
-    @menu = [
+    @main_menu = [
       { name: 'New Game', value: -> { Game.new } },
       { name: 'Instructions', value: -> { run_instructions } },
       { name: 'Hiscores', value: -> { run_hiscores } },
@@ -30,12 +32,11 @@ class App
     missing_file = 'hiscores.json' unless File.exist?('./lib/hiscores.json')
     missing_file = 'questions.json' unless File.exist?('./lib/questions.json')
     return unless missing_file
-  
+
     puts 'Missing File Error'.bold.red
     puts "Oops! You appear to be missing the file #{"./lib/#{missing_file}".bold}. Please re-install the application."
     puts "Visit #{'https://www.github.com/mjsterling/T1A3'.underline} for more information."
-    puts 'Press Enter to continue.'.green
-    gets
+    any_key
     exit
   end
 
@@ -45,8 +46,8 @@ class App
       display_intro
       prompt = prompt_instance
       puts ('─' * 50).yellow
-      prompt.select("For best experience, please maximise your terminal.\n".bold, @menu)
-      File.write('./hiscores.json', JSON.dump(@statistics))
+      prompt.select("For best experience, please maximise your terminal.\n".bold, @main_menu)
+      File.write('./lib/hiscores.json', JSON.dump(@statistics))
     end
   end
 
@@ -70,8 +71,7 @@ class App
     puts '   - Ask The Audience: Each audience member answers the question and the results are displayed as a graph.'
     puts '   - Phone-A-Friend: A friend will say what they think the answer is. They are not always correct, beware!'
     puts "Each lifeline may only be used once.\n"
-    puts 'Press Enter to continue'.green
-    gets
+    any_key
   end
 
   def run_hiscores
@@ -82,8 +82,12 @@ class App
     puts "Top score: #{@statistics['hiscore']} 💎"
     puts "Total winnings: #{total_winnings} 💎"
     puts "Average earnings per game: #{average_earnings} 💎\n"
-    puts 'Press Enter to continue.'.green
-    gets
+    any_key
+  end
+
+  def any_key
+    print 'Press any key to continue.'.green
+    $stdin.getch
   end
 end
 
