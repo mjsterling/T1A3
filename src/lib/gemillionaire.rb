@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'gemillionaire/app'
+require "#{__dir__}/gemillionaire/app"
 
 app = App.new
 app.menu

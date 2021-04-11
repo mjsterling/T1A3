@@ -8,9 +8,9 @@ class Game < App
     super
     @q_sample = @questions.sample(15)
     @score = 0
-    @lifelines = { ff: { status: 'avail', value: [0, 1, 2, 3] },
-                   ata: { status: 'avail', value: rng_graph },
-                   paf: { status: 'avail', value: [] } }
+    @lifelines = { fifty: { status: 'avail', value: [0, 1, 2, 3] },
+                   ask: { status: 'avail', value: rng_graph },
+                   phone: { status: 'avail', value: [] } }
     @game_over = false
     @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
   end
@@ -124,7 +124,7 @@ class Game < App
     @statistics['games_played'] = @statistics['games_played'].to_i + 1
     @statistics['total_winnings'] = @statistics['total_winnings'].to_i + prize
     @statistics['hiscore'] = prize if prize > @statistics['hiscore'].to_i
-    File.write('lib/gemillionaire/hiscores.json', JSON.dump(@statistics))
+    File.write("#{__dir__}/hiscores.json", JSON.dump(@statistics))
     any_key
   end
 

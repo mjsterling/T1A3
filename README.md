@@ -111,12 +111,17 @@ Each option will have the ability to be disabled dynamically by TTY-Prompt (turn
     ```
     - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.7.2p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
 
-3. **Download and Run Gemillionaire**
+3. **Install Gem Dependencies**
+
+    Run the following command:
+    ```
+    gem install tty colorize gemillionaire
+    ```
+
+4. **Run Gemillionaire**
 
     - Enter the following into your terminal:
     ```
-    gem install gemillionaire
-
     irb
 
     require 'gemillionaire'
