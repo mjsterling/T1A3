@@ -24,25 +24,43 @@ class Game < App
     current_q = @q_sample[@score]
     score_table
     puts "\nQuestion #{@score + 1}: #{current_q['question']}\n".bold
-    display_ata if @lifelines[:ata][:status] == 'active'
-    display_paf if @lifelines[:paf][:status] == 'active'
+    display_lifelines
     prompt = prompt_instance
     prompt.select('Select an option:'.bold, gen_menu(current_q), per_page: 8)
   end
 
-  def gen_menu(current_q)
-    answer_k = current_q['answer']
-    answer_v = current_q[answer_k]
-    choices = %w[A B C D].map do |k|
-      { name: "#{k} - #{current_q[k]}", value: -> { check_answer(answer_k, answer_v, k) } }
+  def display_lifelines
+    display_ask_the_audience if @lifelines[:ask][:status] == 'active'
+    display_phone_a_friend if @lifelines[:phone][:status] == 'active'
+  end
+
+  def display_ask_the_audience
+    puts 'Ask The Audience'.center(40, ' ')
+    @keys.each do |k, v|
+      print "#{k} - #{@lifelines[:ask][:value][v]}%".center(10, ' ')
     end
-    disable_answers(choices) if @lifelines[:ff][:status] == 'active'
-    add_lifelines(choices, answer_k)
+    puts "\n\n"
+  end
+
+  def display_phone_a_friend
+    puts 'Phone A Friend'.center(40, ' ')
+    puts "\'I think it's #{@lifelines[:phone][:value]}.\'".center(40, ' ')
+    puts
+  end
+
+  def gen_menu(current_q)
+    answer_key = current_q['answer']
+    answer_value = current_q[answer_key]
+    choices = %w[A B C D].map do |k|
+      { name: "#{k} - #{current_q[k]}", value: -> { check_answer(answer_key, answer_value, k) } }
+    end
+    disable_answers(choices) if @lifelines[:fifty][:status] == 'active'
+    add_lifelines(choices, answer_key)
   end
 
   def disable_answers(choices)
     @keys.each_value do |v|
-      if @lifelines[:ff][:value].include?(v)
+      if @lifelines[:fifty][:value].include?(v)
         choices[v][:name] = choices[v][:name].red
         choices[v][:disabled] = '- (50/50)'.red
       end
@@ -50,16 +68,16 @@ class Game < App
     choices
   end
 
-  def add_lifelines(choices, answer_k)
+  def add_lifelines(choices, answer_key)
     choices << { name: "Walk away with #{@prizes[@score].yellow.bold} 💎", value: -> { confirm_walk_away } }
-    choices << { name: ' ½ - 50/50', value: -> { fifty_fifty(answer_k) } }
-    choices << { name: '🗨  - Ask The Audience', value: -> { ask_the_audience(answer_k) } }
-    choices << { name: '📱 - Phone A Friend', value: -> { phone_a_friend(answer_k) } }
+    choices << { name: ' ½ - 50/50', value: -> { fifty_fifty(answer_key) } }
+    choices << { name: '🗨  - Ask The Audience', value: -> { ask_the_audience(answer_key) } }
+    choices << { name: '📱 - Phone A Friend', value: -> { phone_a_friend(answer_key) } }
     disable_lifelines(choices)
   end
 
   def lifeline_statuses
-    [@lifelines[:ff][:status], @lifelines[:ata][:status], @lifelines[:paf][:status]]
+    [@lifelines[:fifty][:status], @lifelines[:ask][:status], @lifelines[:phone][:status]]
   end
 
   def disable_lifelines(choices)
@@ -72,22 +90,8 @@ class Game < App
     choices
   end
 
-  def display_ata
-    puts 'Ask The Audience'.center(40, ' ')
-    @keys.each do |k, v|
-      print "#{k} - #{@lifelines[:ata][:value][v]}%".center(10, ' ')
-    end
-    puts "\n\n"
-  end
-
-  def display_paf
-    puts 'Phone A Friend'.center(40, ' ')
-    puts "\'I think it's #{@lifelines[:paf][:value]}.\'".center(40, ' ')
-    puts
-  end
-
-  def check_answer(answer_k, answer_v, input)
-    return you_lose(answer_k, answer_v) unless input == answer_k
+  def check_answer(answer_key, answer_value, input)
+    return you_lose(answer_key, answer_value) unless input == answer_key
 
     @score += 1
     reset_lifelines
@@ -95,9 +99,9 @@ class Game < App
   end
 
   def reset_lifelines
-    @lifelines[:ff][:status]  = 'used' if @lifelines[:ff][:status]  == 'active'
-    @lifelines[:ata][:status] = 'used' if @lifelines[:ata][:status] == 'active'
-    @lifelines[:paf][:status] = 'used' if @lifelines[:paf][:status] == 'active'
+    @lifelines[:fifty][:status]  = 'used' if @lifelines[:fifty][:status]  == 'active'
+    @lifelines[:ask][:status] = 'used' if @lifelines[:ask][:status] == 'active'
+    @lifelines[:phone][:status] = 'used' if @lifelines[:phone][:status] == 'active'
   end
 
   def you_win
@@ -108,8 +112,8 @@ class Game < App
     update_stats(1_000_000)
   end
 
-  def you_lose(answer_k, answer_v)
-    puts "Incorrect! The correct answer was #{answer_k} - #{answer_v}."
+  def you_lose(answer_key, answer_value)
+    puts "Incorrect! The correct answer was #{answer_key} - #{answer_value}."
     @game_over = true
     prize = @prizes[@score / 5 * 5] # removes remainder and returns nearest safe point at 0, 5 or 10
     puts "You won #{prize} 💎. Better luck next time!"
@@ -149,9 +153,9 @@ class Game < App
   end
 
   def fifty_fifty(answer)
-    @lifelines[:ff][:status] = 'active'
-    @lifelines[:ff][:value].slice!(@keys[answer])
-    @lifelines[:ff][:value].slice!(rand(2))
+    @lifelines[:fifty][:status] = 'active'
+    @lifelines[:fifty][:value].slice!(@keys[answer])
+    @lifelines[:fifty][:value].slice!(rand(2))
   end
 
   def rng_graph
@@ -167,15 +171,15 @@ class Game < App
   end
 
   def ask_the_audience(answer)
-    @lifelines[:ata][:status] = 'active'
+    @lifelines[:ask][:status] = 'active'
     return if rand(2).zero?
 
     # increase correct answer percentage by 30% and reduce others by 10%
-    @lifelines[:ata][:value].map!.with_index { |n, index| n + (index == @keys[answer] ? 30 : -10) }
+    @lifelines[:ask][:value].map!.with_index { |n, index| n + (index == @keys[answer] ? 30 : -10) }
   end
 
   def phone_a_friend(answer)
-    @lifelines[:paf][:status] = 'active'
-    @lifelines[:paf][:value] = rand(2).zero? ? %w[A B C D].sample : answer
+    @lifelines[:phone][:status] = 'active'
+    @lifelines[:phone][:value] = rand(2).zero? ? %w[A B C D].sample : answer
   end
 end
