@@ -4,22 +4,18 @@
 
 ## Software Development Plan
 
-### Overview
-
-My T1A3 terminal app will be a playable version of the Who Wants To Be A Millionaire game show.
-
 ### Purpose
 
-The app will allow users to play a terminal-based interpretation of the popular game show Who Wants To Be A Millionaire, in which players are presented with a series of multiple choice questions and are awarded increasing amounts of points (represented by gems) for subsequent correct answers. Answering fifteen questions in a row correctly will enable them to win the maximum prize of one million gems.
+My T1A3 terminal app will be a playable version of the Who Wants To Be A Millionaire game show. The app will allow users to play a terminal-based interpretation of the popular game show Who Wants To Be A Millionaire, in which players are presented with a series of multiple choice questions and are awarded increasing amounts of points (represented by gems) for subsequent correct answers. Answering fifteen questions in a row correctly will enable them to win the maximum prize of one million gems.
 The application will consist of a main menu, enabling users to either start a new game, view their hiscores and statistics, read instructions on how to play the game, or exit the application. 
 
 The game window will display a score bar at the top outlining the player's current score and subsequent possible scores for each question, the current displayed question (selected at random from a pool of questions stored in JSON format), and a TTY-Prompt list of possible options, including the four possible multiple choice answers, an option to walk away with one's current earnings, and the three tradition Who Wants To Be A Millionaire lifelines (*50/50*, *Phone A Friend* and *Ask The Audience*)
 
 The app is intended to showcase my skill level as a developer by designing and creating a playable version of a recognisable game. It will potentially assist with my career progression by adding to my overall portfolio of work. Additionally, by releasing it as a gem it will provide a redistributable method for users to practise general knowledge, have fun and learn new things.
 
-The target audience is anyone who wants to play a free trivia game in their terminal; juxtaposing the ubiquity of trivia games as a hobby against the relative dearth of terminal enthusiasts, people who know enough to install a Ruby gem and people who know about the app means the target audience probably intersects solely at my educators and possibly classmates.
+The target audience is anyone who wants to play a free trivia game in their terminal, however with the general popularity of trivia games as a hobby, the relative dearth of terminal enthusiasts, the number of people who know enough to install a Ruby gem, and the absolute lack of marketing or awareness of the app means the target audience probably intersects solely at my educators and possibly classmates.
 
-A user will download and use the app by ensuring they have Ruby >2.7.2 installed, then either installing the gem in their terminal and running it in IRB, or by downloading a production copy from my Github and executing a shell script which will be packaged with the application.
+A user will download and use the app by ensuring they have Ruby >2.7.2 installed, then either installing the gem in their terminal and running it in IRB, or by downloading a copy from my Github and executing the appropriate Ruby file in their terminal.
 
 ### Features
 
@@ -43,21 +39,36 @@ A user will download and use the app by ensuring they have Ruby >2.7.2 installed
     - Ask the audience will show a percentage based graph of each of the four answers, the accuracy of which will be based on RNG: 2/3 of the time the correct answer will be heavily weighted, and the other 1/3 of the time the answers will be entirely random.
     - Phone a friend will give the correct answer a decent amount of the time, again based on RNG - 2/3 of the time the "friend" will tell you the correct answer, whereas the other 1/3 an answer will be selected at random.
 
-- Error Handling
-
-    The application will check that its file dependencies are present before executing, and return an in-application error message indicating that the user needs to reinstall the application.
 
 ### UI/UX
 
-The opening screen will present a selection menu where users can select which part of the application they wish to visit.
+The opening screen will present a selection menu where users can select which part of the application they wish to visit from the following options:
+- New Game
+- Instructions
+- Hiscores
+- Exit
 
 There will be a help/instructions screen telling users how to play the game, accessible from the main menu.
 
 All menus will be built in TTY Prompt, meaning users can conveniently navigate through menu options using arrow keys - TTY Prompt automatically tells users how to navigate through the menu at each menu display point.
 
+The application will check that its file dependencies are present before executing, and return a clean, in-application error message indicating which file is missing and telling the user that they need to reinstall the gem.
+
+On selecting "New Game" from the main menu, users will be presented with a question and be able to select from the following dynamically generated options on a TTY-Prompt menu:
+- Answer A
+- Answer B
+- Answer C
+- Answer D
+- Walk Away with current winnings
+- Use 50/50 Lifeline
+- Use Ask The Audience Lifeline
+- Use Phone A Friend Lifeline
+
+Each option will have the ability to be disabled dynamically by TTY-Prompt (turning red in the process) when it is unavailable, for example when the lifeline has been used or when an answer is disabled by the 50/50 lifeline.
+
 ### Diagram:
 
-![diagram](./T1A3ControlFlow.svg)
+![diagram](./docs/T1A3ControlFlow.svg)
 
 ## Implementation Plan
 
@@ -67,7 +78,7 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
 
 ### How To Install Gemillionaire
 
-1. Open your terminal
+1. **Open your terminal**
     - Windows - [How to install and run Bash on Windows 10](https:/itsfoss.com/install-bash-on-windows/)
     - MacOS 
         - Press Command + Spacebar
@@ -78,11 +89,7 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
     - Other Linux distros
         - If you've managed to install one of these I highly doubt you need instructions.
 
-2. Install Git
-
-- [How To Install Git](https://github.com/git-guides/install-git)
-
-3. Install Ruby 2.7.2 or later
+2. **Install Ruby 2.7.2 or later**
     - Open your bash/zsh terminal
     - Copy the following lines into your terminal, one at a time, and wait for the terminal prompt to return before entering the next one:
     ```
@@ -102,9 +109,9 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
 
     rbenv global 2.7.2
     ```
-    - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
+    - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.7.2p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
 
-4. Download and Run Gemillionaire
+3. **Download and Run Gemillionaire**
 
     - Enter the following into your terminal:
     ```

@@ -14,7 +14,7 @@ class App
   attr_accessor :questions, :statistics, :prizes, :main_menu
 
   def initialize
-    @args = ARGV.slice
+    @args = ARGV.clone
     check_dependencies
     @questions = JSON.parse(File.read('lib/gemillionaire/questions.json'))
     @statistics = JSON.parse(File.read('lib/gemillionaire/hiscores.json'))
@@ -51,6 +51,10 @@ class App
     loop do
       system('clear')
       display_intro
+      if @args.include?('newgame')
+        @args = []
+        new_game
+      end
       prompt = prompt_instance
       puts ('─' * 50).yellow
       prompt.select("For best experience, please maximise your terminal.\n".bold, @main_menu)
