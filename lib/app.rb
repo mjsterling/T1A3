@@ -11,8 +11,9 @@ end
 # Run top level methods and initialize menu
 class App
   def initialize
-    @questions = JSON.parse(File.read('./questions.json'))
-    @statistics = JSON.parse(File.read('./hiscores.json'))
+    check_dependencies
+    @questions = JSON.parse(File.read('./lib/questions.json'))
+    @statistics = JSON.parse(File.read('./lib/hiscores.json'))
     @prizes = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
                '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
     @menu = [
@@ -21,6 +22,21 @@ class App
       { name: 'Hiscores', value: -> { run_hiscores } },
       { name: 'Exit', value: -> { exit } }
     ]
+  end
+
+  def check_dependencies
+    missing_file = 'app.rb' unless File.exist?('./lib/app.rb')
+    missing_file = 'game.rb' unless File.exist?('./lib/game.rb')
+    missing_file = 'hiscores.json' unless File.exist?('./lib/hiscores.json')
+    missing_file = 'questions.json' unless File.exist?('./lib/questions.json')
+    return unless missing_file
+  
+    puts 'Missing File Error'.bold.red
+    puts "Oops! You appear to be missing the file #{"./lib/#{missing_file}".bold}. Please re-install the application."
+    puts "Visit #{'https://www.github.com/mjsterling/T1A3'.underline} for more information."
+    puts 'Press Enter to continue.'.green
+    gets
+    exit
   end
 
   def menu
