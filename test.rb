@@ -24,12 +24,12 @@ RSpec.describe Game do
       expect(game.q_sample.length).to eq 15
     end
     it 'should return unique questions' do
-    duplicate = false
-    14.times do |i|
-      duplicate = true if game.q_sample[14] == game.q_sample[i]
+      duplicate = false
+      14.times do |i|
+        duplicate = true if game.q_sample[14] == game.q_sample[i]
+      end
+      expect(duplicate).to eq false
     end
-    expect(duplicate).to eq false
-  end
   end
 
   describe 'during game:' do
@@ -49,13 +49,12 @@ RSpec.describe Game do
     end
   end
 
-  describe 'end of game' do
+  describe 'end of game:' do
     it 'should break when game over' do
       game.game_over = true
       expect(game.start).to eq nil
     end
     it 'should save highscores correctly' do
-      game.statistics['hiscore'] = 0
       game.update_stats(69_420)
       expect(game.statistics['hiscore']).to eq 69_420
     end
