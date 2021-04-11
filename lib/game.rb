@@ -15,6 +15,9 @@ class Game < App
     @game_over = false
     @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
 
+  end
+
+  def start
     display_question until @game_over
   end
 

@@ -19,11 +19,16 @@ class App
     @prizes = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
                '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
     @main_menu = [
-      { name: 'New Game', value: -> { Game.new } },
+      { name: 'New Game', value: -> { new_game } },
       { name: 'Instructions', value: -> { run_instructions } },
       { name: 'Hiscores', value: -> { run_hiscores } },
       { name: 'Exit', value: -> { exit } }
     ]
+  end
+
+  def new_game
+    game = Game.new
+    game.start
   end
 
   def check_dependencies
