@@ -6,7 +6,6 @@ class Game < App
 
   def initialize
     super
-
     @q_sample = @questions.sample(15)
     @score = 0
     @lifelines = { ff: { status: 'avail', value: [0, 1, 2, 3] },
@@ -14,7 +13,6 @@ class Game < App
                    paf: { status: 'avail', value: [] } }
     @game_over = false
     @keys = { 'A' => 0, 'B' => 1, 'C' => 2, 'D' => 3 }
-
   end
 
   def start
@@ -122,6 +120,7 @@ class Game < App
     @statistics['games_played'] = @statistics['games_played'].to_i + 1
     @statistics['total_winnings'] = @statistics['total_winnings'].to_i + prize
     @statistics['hiscore'] = prize if prize > @statistics['hiscore'].to_i
+    File.write('./hiscores.json', JSON.dump(@statistics))
     any_key
   end
 

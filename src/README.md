@@ -104,13 +104,15 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
     ```
     - Verify Ruby has been installed correctly by typing `ruby -v`. If you see something similar to `ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]`, you're ready to go!
 
-4. Download Gemillionaire
+4. Download and Run Gemillionaire
 
     - Enter the following into your terminal:
     ```
-    git clone git@github.com:mjsterling/T1A3.git
+    gem install gemillionaire
+
+    irb
+
+    require 'gemillionaire'
     ```
 
 5. Run Gemillionaire
-
-    - Navigate to the downloaded folder in your terminal, then run `ruby wwtbam.rb` to start the game!

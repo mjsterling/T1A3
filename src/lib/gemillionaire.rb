@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/app'
+require_relative 'app'
 
 app = App.new
 app.menu
