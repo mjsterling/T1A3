@@ -114,5 +114,3 @@ All menus will be built in TTY Prompt, meaning users can conveniently navigate t
 
     require 'gemillionaire'
     ```
-
-5. Run Gemillionaire

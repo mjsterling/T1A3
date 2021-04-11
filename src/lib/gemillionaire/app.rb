@@ -79,7 +79,7 @@ class App
   end
 
   def run_hiscores
-    @statistics = JSON.parse(File.read('gemillionaire/hiscores.json'))
+    @statistics = JSON.parse(File.read('lib/gemillionaire/hiscores.json'))
     games_played = @statistics['games_played'].to_i
     total_winnings = @statistics['total_winnings'].to_i
     average_earnings = games_played.zero? ? 0 : total_winnings / games_played
