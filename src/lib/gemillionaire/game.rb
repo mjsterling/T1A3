@@ -120,7 +120,7 @@ class Game < App
     @statistics['games_played'] = @statistics['games_played'].to_i + 1
     @statistics['total_winnings'] = @statistics['total_winnings'].to_i + prize
     @statistics['hiscore'] = prize if prize > @statistics['hiscore'].to_i
-    File.write('./hiscores.json', JSON.dump(@statistics))
+    File.write('lib/gemillionaire/hiscores.json', JSON.dump(@statistics))
     any_key
   end
 

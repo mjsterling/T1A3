@@ -14,8 +14,8 @@ class App
 
   def initialize
     check_dependencies
-    @questions = JSON.parse(File.read('./questions.json'))
-    @statistics = JSON.parse(File.read('./hiscores.json'))
+    @questions = JSON.parse(File.read('lib/gemillionaire/questions.json'))
+    @statistics = JSON.parse(File.read('lib/gemillionaire/hiscores.json'))
     @prizes = ['0', '500', '1,000', '2,000', '3,000', '5,000', '7,500', '10,000', '12,500', '15,000',
                '25,000', '50,000', '100,000', '250,000', '500,000', '1,000,000'].freeze
     @main_menu = [
@@ -32,10 +32,10 @@ class App
   end
 
   def check_dependencies
-    missing_file = 'app.rb' unless File.exist?('./app.rb')
-    missing_file = 'game.rb' unless File.exist?('./game.rb')
-    missing_file = 'hiscores.json' unless File.exist?('./hiscores.json')
-    missing_file = 'questions.json' unless File.exist?('./questions.json')
+    missing_file = 'app.rb' unless File.exist?('lib/gemillionaire/app.rb')
+    missing_file = 'game.rb' unless File.exist?('lib/gemillionaire/game.rb')
+    missing_file = 'hiscores.json' unless File.exist?('lib/gemillionaire/hiscores.json')
+    missing_file = 'questions.json' unless File.exist?('lib/gemillionaire/questions.json')
     return unless missing_file
 
     puts 'Missing File Error'.bold.red
@@ -79,7 +79,7 @@ class App
   end
 
   def run_hiscores
-    @statistics = JSON.parse(File.read('./hiscores.json'))
+    @statistics = JSON.parse(File.read('gemillionaire/hiscores.json'))
     games_played = @statistics['games_played'].to_i
     total_winnings = @statistics['total_winnings'].to_i
     average_earnings = games_played.zero? ? 0 : total_winnings / games_played
@@ -96,4 +96,4 @@ class App
   end
 end
 
-require_relative 'game'
+require 'gemillionaire/game'

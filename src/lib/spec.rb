@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'app'
+require_relative 'gemillionaire/app'
 
 RSpec.describe App do
   app = App.new

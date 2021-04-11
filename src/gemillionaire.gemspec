@@ -5,7 +5,8 @@ Gem::Specification.new do |s|
   s.description = 'Who Wants To Be A Millionaire terminal-based game'
   s.authors     = ['Matthew Sterling']
   s.email       = 'mjsterling93@gmail.com'
-  s.files       = ['./lib/gemillionaire.rb', './lib/app.rb', './lib/game.rb', './lib/hiscores.json', './lib/questions.json']
+  s.files       = ['lib/gemillionaire.rb', 'lib/gemillionaire/app.rb', 'lib/gemillionaire/game.rb',
+                   'lib/gemillionaire/hiscores.json', 'lib/gemillionaire/questions.json']
   s.homepage    =
     'https://rubygems.org/gems/gemillionaire'
   s.license = 'MIT'
