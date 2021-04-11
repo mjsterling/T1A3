@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'tty'
 require 'tty-prompt'
 require 'colorize'
 
@@ -13,6 +14,7 @@ class App
   attr_accessor :questions, :statistics, :prizes, :main_menu
 
   def initialize
+    @args = ARGV.slice
     check_dependencies
     @questions = JSON.parse(File.read('lib/gemillionaire/questions.json'))
     @statistics = JSON.parse(File.read('lib/gemillionaire/hiscores.json'))
